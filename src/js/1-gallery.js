@@ -86,3 +86,15 @@ function createGalleryItemsMarkup(items) {
 const lightbox = new SimpleLightbox('.gallery a', {
   captionsData: 'alt', captionPosition: 'bottom', captionDelay: 250
 });
+function setColor(selector, color) {
+  const elements = document.querySelectorAll(selector);
+  elements.forEach(element => {
+    element.style.color = color;
+  });
+}
+
+lightbox.on('shown.simplelightbox', function () {
+  document.querySelector('.sl-wrapper').style.backgroundColor =
+    'rgba(46, 47, 66, 0.80)';
+  setColor('.sl-close, .sl-counter, .sl-navigation button', '#fff');
+});
