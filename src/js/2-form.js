@@ -3,23 +3,34 @@ const formRef = document.querySelector('.feedback-form');
 
 let formObject = {};
 
-formRef.addEventListener('input', event => {
-  formObject[event.target.name] = event.target.value.trim();
-  localStorage.setItem(FEEDBACK_STORAGE_KEY, JSON.stringify(formObject));
-});
+ function saveToLocalStorage() {
+        const formData = {
+            email: formRef.email.value.trim(),
+            message: formRef.message.value.trim()
+        };
+        localStorage.setItem(FEEDBACK_STORAGE_KEY, JSON.stringify(formData));
+    }
+formRef.addEventListener('input', saveToLocalStorage);
+
+    const savedData = localStorage.getItem(FEEDBACK_STORAGE_KEY);
+    if (savedData) {
+        const parsedData = JSON.parse(savedData);
+        formRef.email.value = parsedData.email;
+        formRef.message.value = parsedData.message;
+    }
 
 formRef.addEventListener('submit', event => {
   const emailValue = formRef.elements.email.value;
   const messageValue = formRef.elements.message.value;
   event.preventDefault();
-  if (!emailValue || !messageValue) {
-    alert('All fields must be filled in');
-  } else {
-    const storageInfo = JSON.parse(localStorage.getItem(FEEDBACK_STORAGE_KEY));
-    localStorage.removeItem(FEEDBACK_STORAGE_KEY);
-    formRef.reset();
-    console.log(storageInfo);
-  }
+  
+  if (emailValue && messageValue) {
+            console.log({ email: emailValue, message: messageValue });
+            localStorage.removeItem('feedback-form-state');
+            formRef.reset();
+        } else {
+            alert('All fields must be filled in');
+        }
 });
 
 try {
@@ -33,8 +44,3 @@ try {
 } catch (error) {
   console.error('PARSE ERROR');
 }
-
-
-
-
-
